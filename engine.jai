@@ -30,11 +30,16 @@ Timer :: struct {
 Engine :: struct($packages: Type) #modify {
     t_info := cast(*Type_Info)packages;
 
-    if t_info.type != .STRUCT then return false;
+    if t_info.type != .STRUCT {
+        print("\x1b[31m[Error] Unknown packages type (no struct):\x1b[0m %\n", packages);
+
+        return false;
+    }
     s_info := cast(*Type_Info_Struct)packages;
 
     if s_info.polymorph_source_struct != cast(*Type_Info_Struct)Packages {
         print("\x1b[31m[Error] Unknown packages type:\x1b[0m %\n", packages);
+        print("\x1b[31m[Error] Use 'Packages(Your_Package1, Your_Package2)' here.");
         return false;
     }
     return true;

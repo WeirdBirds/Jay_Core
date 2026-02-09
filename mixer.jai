@@ -36,7 +36,7 @@ Mixer :: struct (in_mixins: ..Type, procs: []Proc_Item, _deps: []Type)  {
                     array_add_if_unique(*type_indices, arg_type_index);
                     in_args[index] = sprint("arg%: *type_%", index, arg_type_index);
                 } else {
-                    arg_type_index := <<cast(*u64)*arg;
+                    arg_type_index := reinterp(u64, arg);
                     array_add_if_unique(*type_indices, arg_type_index);
                     in_args[index] = sprint("arg%: type_%", index, arg_type_index);
                 }
@@ -60,7 +60,7 @@ Mixer :: struct (in_mixins: ..Type, procs: []Proc_Item, _deps: []Type)  {
                         args: [..] Type;
 
                         for arg, index: proc_info.argument_types {
-                            array_add(*args, <<cast(*Type)*arg);
+                            array_add(*args, reinterp(Type, arg));
                         }
 
                         item := Proc_Item.{
@@ -120,7 +120,7 @@ Mixer :: struct (in_mixins: ..Type, procs: []Proc_Item, _deps: []Type)  {
         }
 
         for t_index: type_indices {
-            print_to_builder(*builder, "\ttype_% :: #run -> Type { t_index := %; return <<(cast(*Type) *t_index); }\n", t_index, t_index);
+            print_to_builder(*builder, "\ttype_% :: #run -> Type { t_index := %; return reinterp(Type, t_index); }\n", t_index, t_index);
         }
 
         for call, type: calls {
@@ -159,7 +159,7 @@ sort :: (mixins: []Type) -> []Type {
         m_info := cast(*Type_Info_Struct)mixin;
         nodes[m_index].value = mixin;
         for member: m_info.members {
-            type := <<(cast(*Type) *member.type);
+            type := reinterp(Type, member.type);
             t_info:= (cast(**Type_Info_Struct) *member.type).*;
 
             if member.name == "before" {

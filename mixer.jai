@@ -7,7 +7,7 @@ Proc_Item :: struct {
 }
 
 Mixer :: struct (in_mixins: ..Type, procs: []Proc_Item, _deps: []Type)  {
-    mixins :: #run -> []Type {
+    mixins :: #run,stallable -> []Type {
         result: [..]Type;
         array_add(*result, ..in_mixins);
         array_add(*result, .._deps);
@@ -114,18 +114,18 @@ Mixer :: struct (in_mixins: ..Type, procs: []Proc_Item, _deps: []Type)  {
                     in_args_string := join(..in_args, ", ",, temp);
                     args_string := join(..args, ", ",, temp);
 
-                    append(find_or_add(*calls, sprint("% :: (%)", member.name, in_args_string)), sprint("\t\tmixins[%].%(%);\n", n_index, member.name, args_string,, temp));
+                    append(find_or_add(*calls, sprint("% :: (%)", member.name, in_args_string)), sprint("        mixins[%].%(%);\n", n_index, member.name, args_string,, temp));
                 }
             }
         }
 
         for t_index: type_indices {
-            print_to_builder(*builder, "\ttype_% :: #run -> Type { t_index := %; return reinterp(Type, t_index); }\n", t_index, t_index);
+            print_to_builder(*builder, "    type_% :: #run -> Type { t_index := %; return reinterp(Type, t_index); }\n", t_index, t_index);
         }
 
         for call, type: calls {
             if type.count {
-                print_to_builder(*builder, "\t% {\n%\n\t}\n", type, builder_to_string(*call));
+                print_to_builder(*builder, "    % {\n%\n\t}\n", type, builder_to_string(*call));
             }
         }
 

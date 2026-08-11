@@ -1,4 +1,5 @@
 Packages :: #bake_arguments Mixer(procs=.[
+    .{"init",           .[*Engine]},
     .{"before_begin",   .[*Engine]},
     .{"begin",          .[*Engine]},
     .{"after_begin",    .[*Engine]},
@@ -21,9 +22,9 @@ Lifecycle :: struct {
 }
 
 Timer :: struct {
-    time: float64;
-    delta_time: float64;
-    _last_tick_time: Apollo_Time;
+    time:             float64;
+    delta_time:       float64;
+    _last_tick_time:  Apollo_Time;
     _first_tick_time: Apollo_Time;
 }
 
@@ -45,8 +46,12 @@ Engine :: struct($packages: Type) #modify {
     return true;
 } {
     system_threads: Thread_Group = .{};
-    is_running: bool = false;
+    is_running:     bool         = true;
     timer: Timer;
+}
+
+has_package :: inline (in_engine: *$Engine, $package: Type) -> bool {
+    return array_find(engine.packages.in_mixins);
 }
 
 run :: (in_engine: *Engine) {
@@ -57,15 +62,14 @@ run :: (in_engine: *Engine) {
     in_engine.packages.begin(in_engine);
     in_engine.packages.after_begin(in_engine);
 
-    in_engine.is_running = true;
     while in_engine.is_running {
-        in_engine.packages.before_tick(in_engine);
 
         current_tick := current_time_monotonic();
-        in_engine.timer.time = to_float64_seconds(current_tick - in_engine.timer._first_tick_time);
-        in_engine.timer.delta_time = to_float64_seconds(current_tick - in_engine.timer._last_tick_time);
+        in_engine.timer.time            = to_float64_seconds(current_tick - in_engine.timer._first_tick_time);
+        in_engine.timer.delta_time      = to_float64_seconds(current_tick - in_engine.timer._last_tick_time);
         in_engine.timer._last_tick_time = current_tick;
-
+        
+        in_engine.packages.before_tick(in_engine);
         in_engine.packages.tick(in_engine);
         in_engine.packages.after_tick(in_engine);
     }

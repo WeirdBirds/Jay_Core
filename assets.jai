@@ -1,6 +1,7 @@
 #import "System";
 #import "File";
 #import "File_Utilities";
+#import "Hash_Table";
 
 #run {
     make_directory_if_it_does_not_exist(Paths.assets_user, true);

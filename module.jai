@@ -15,9 +15,7 @@ using Logger :: #import "Jay_Logger";
 Paths :: struct {
     
     assets_engine ::  #run sprint("%/engine/Jay_Assets", get_working_directory());
-
     assets_user ::  #run sprint("%/assets", get_working_directory());
-    assets_out :: #run sprint("%/bin/assets", get_working_directory());
- 
+    assets_out :: #run sprint("%/bin/assets", get_working_directory()); 
     handlers :: #run sprint("%/handlers", get_working_directory());
 }

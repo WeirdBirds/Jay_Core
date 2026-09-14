@@ -119,3 +119,5 @@ clear_asset_registry :: ($asset_type: Type) {
 #scope_module
 
 loaded_assets : Table(u64, Table(u64, *void));
+
+

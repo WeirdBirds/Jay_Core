@@ -19,3 +19,5 @@ Paths :: struct {
     assets_out :: #run sprint("%/bin/assets", get_working_directory()); 
     handlers :: #run sprint("%/handlers", get_working_directory());
 }
+
+#module_parameters(DEBUG := false, MAX_ASSET_TYPES := 1024);

@@ -55,7 +55,6 @@ has_package :: inline (in_engine: *$Engine, $package: Type) -> bool {
 }
 
 run :: (in_engine: *Engine) {
-
     in_engine.timer._first_tick_time = current_time_monotonic();
     
     in_engine.packages.before_begin(in_engine);
